@@ -35,7 +35,9 @@ import github from '@actions/github';
 //   }
 // })();
 
-(function () {
+(async function () {
   const token = core.getInput('myToken');
   const octokit = github.getOctokit(token);
+  const { data } = await octokit.rest.pulls.get();
+  console.log('data', data);
 })();
