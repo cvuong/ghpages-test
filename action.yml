@@ -2,4 +2,4 @@ name: 'Publish docs to GitHub Pages'
 description: 'Action that publishes docs to the ghpages branch'
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'
