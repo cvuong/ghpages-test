@@ -6,6 +6,7 @@ import ghpages from 'gh-pages';
       ghpages.publish(
         'static',
         {
+          repo: 'https://github.com/cvuong/ghpages-test.git',
           user: {
             name: 'Publish Docs',
             email: 'test@test.com',
