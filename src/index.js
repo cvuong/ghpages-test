@@ -3,13 +3,22 @@ import ghpages from 'gh-pages';
 (async function () {
   function ghPagesPromise() {
     return new Promise((resolve, reject) => {
-      ghpages.publish('static', (err) => {
-        if (err) {
-          reject(err);
-          return;
+      ghpages.publish(
+        'static',
+        {
+          user: {
+            name: 'Publish Docs',
+            email: 'test@test.com',
+          },
+        },
+        (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
         }
-        resolve();
-      });
+      );
     });
   }
 
