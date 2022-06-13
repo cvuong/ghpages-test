@@ -8,9 +8,10 @@ import ghpages from 'gh-pages';
         {
           repo: 'https://github.com/cvuong/ghpages-test.git',
           user: {
-            name: 'Publish Docs',
+            name: 'github-actions-bot',
             email: 'test@test.com',
           },
+          dest: 'blah1',
         },
         (err) => {
           if (err) {

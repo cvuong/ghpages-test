@@ -16245,13 +16245,24 @@ __nccwpck_require__.r(__webpack_exports__);
 (async function () {
   function ghPagesPromise() {
     return new Promise((resolve, reject) => {
-      gh_pages__WEBPACK_IMPORTED_MODULE_0__.publish('static', (err) => {
-        if (err) {
-          reject(err);
-          return;
+      gh_pages__WEBPACK_IMPORTED_MODULE_0__.publish(
+        'static',
+        {
+          // repo: 'https://github.com/cvuong/ghpages-test.git',
+          // user: {
+          //   name: 'Publish Docs',
+          //   email: 'test@test.com',
+          // },
+          dest: 'blah1',
+        },
+        (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
         }
-        resolve();
-      });
+      );
     });
   }
 
