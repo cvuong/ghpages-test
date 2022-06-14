@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
 import { context } from '../dist';
@@ -40,10 +41,16 @@ import { context } from '../dist';
 (async function () {
   const token = core.getInput('token');
   const context = github.context;
-  const octokit = github.getOctokit(token);
-  const newIssue = await octokit.rest.issues.create({
-    ...context.repo,
-    title: 'new issue',
-    body: 'hi there',
-  });
+  console.log('context', context);
+  // const octokit = github.getOctokit(token);
+  // const newIssue = await octokit.rest.issues.create({
+  //   ...context.repo,
+  //   title: 'new issue',
+  //   body: 'hi there',
+  // });
+  // const ref = await octokit.rest.git.createRef({
+  //   ...context.repo,
+  //   ref: 'refs/heads/blah',
+  //   sha: '1234'
+  // });
 })();
