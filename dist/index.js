@@ -8944,7 +8944,8 @@ __nccwpck_require__.r(__webpack_exports__);
 // })();
 
 (async function () {
-  const token = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('myToken');
+  const token = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('token');
+  console.log('token', token);
   const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1___default().getOctokit(token);
   const { data } = await octokit.rest.pulls.get();
   console.log('data', data);

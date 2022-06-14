@@ -36,7 +36,8 @@ import github from '@actions/github';
 // })();
 
 (async function () {
-  const token = core.getInput('myToken');
+  const token = core.getInput('token');
+  console.log('token', token);
   const octokit = github.getOctokit(token);
   const { data } = await octokit.rest.pulls.get();
   console.log('data', data);
