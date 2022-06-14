@@ -37,7 +37,8 @@ import core from '@actions/core';
 
 (async function () {
   console.log('top of function');
-  const token = core.getInput('token');
+  console.log('core', core);
+  // const token = core.getInput('token');
   // console.log('token', token);
   // const octokit = github.getOctokit(token);
   // const { data } = await octokit.rest.pulls.get();

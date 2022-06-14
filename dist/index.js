@@ -2151,7 +2151,8 @@ __nccwpck_require__.r(__webpack_exports__);
 
 (async function () {
   console.log('top of function');
-  const token = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('token');
+  console.log('core', (_actions_core__WEBPACK_IMPORTED_MODULE_0___default()));
+  // const token = core.getInput('token');
   // console.log('token', token);
   // const octokit = github.getOctokit(token);
   // const { data } = await octokit.rest.pulls.get();
