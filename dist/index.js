@@ -8909,7 +8909,6 @@ __nccwpck_require__.r(__webpack_exports__);
 
 
 
-
 // import ghpages from 'gh-pages';
 
 // (async function () {
@@ -8949,7 +8948,7 @@ __nccwpck_require__.r(__webpack_exports__);
   // console.log('core', core);
   const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token');
   console.log('token', token);
-  const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1___default().getOctokit(token);
+  const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
   const { data } = await octokit.rest.pulls.get();
   console.log('data', data);
 })();
