@@ -9,7 +9,7 @@
     "gh-pages": "^4.0.0"
   },
   "scripts": {
-    "build": "yarn run ncc build src/index.js -s -o dist/",
-    "deploy": "gh-pages -d dist"
+    "clean": "rm -rf dist/",
+    "build": "yarn run clean && yarn run ncc build src/index.js -s -o dist/"
   }
 }
