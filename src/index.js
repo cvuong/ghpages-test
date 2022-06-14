@@ -1,5 +1,6 @@
-import core from '@actions/core';
-// import github from '@actions/github';
+import * as core from '@actions/core';
+
+import github from '@actions/github';
 
 // import ghpages from 'gh-pages';
 
@@ -36,11 +37,11 @@ import core from '@actions/core';
 // })();
 
 (async function () {
-  console.log('top of function');
-  console.log('core', core);
-  // const token = core.getInput('token');
-  // console.log('token', token);
-  // const octokit = github.getOctokit(token);
-  // const { data } = await octokit.rest.pulls.get();
-  // console.log('data', data);
+  // console.log('top of function');
+  // console.log('core', core);
+  const token = core.getInput('token');
+  console.log('token', token);
+  const octokit = github.getOctokit(token);
+  const { data } = await octokit.rest.pulls.get();
+  console.log('data', data);
 })();
