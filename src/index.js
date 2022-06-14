@@ -38,15 +38,9 @@ import { context } from '../dist';
 // })();
 
 (async function () {
-  // console.log('top of function');
-  // console.log('core', core);
   const token = core.getInput('token');
-  console.log('token', token);
-  console.log('context', github.context);
   const context = github.context;
   const octokit = github.getOctokit(token);
-  // const { data } = await octokit.rest.pulls.get();
-  // console.log('data', data);
   const newIssue = await octokit.rest.issues.create({
     ...context.repo,
     title: 'new issue',
