@@ -13350,12 +13350,18 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _dist__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(342);
 /* harmony import */ var _dist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(_dist__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(7147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(5630);
-/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__nccwpck_require__.n(fs_extra__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var temp_dir__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(8770);
-/* harmony import */ var temp_dir__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nccwpck_require__.n(temp_dir__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2081);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(7147);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_8__ = __nccwpck_require__(5630);
+/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__nccwpck_require__.n(fs_extra__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(1017);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var temp_dir__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(8770);
+/* harmony import */ var temp_dir__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__nccwpck_require__.n(temp_dir__WEBPACK_IMPORTED_MODULE_7__);
+
+
 
 
 
@@ -13400,29 +13406,39 @@ __nccwpck_require__.r(__webpack_exports__);
 // })();
 
 (async function () {
-  const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token');
-  const context = _actions_github__WEBPACK_IMPORTED_MODULE_2__.context;
-  const shortSha = context.sha;
-  console.log('context', context);
+  // const token = core.getInput('token');
+  // const context = github.context;
+  // const shortSha = context.sha;
+  const shortSha = (0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)('git rev-parse --short HEAD').toString().trim();
+  console.log('shortSha', shortSha);
+  const sourceDir = __nccwpck_require__.ab + "static";
+  // console.log(path.join(__dirname, '..', '..', 'aaaa'));
+  // console.log(path.join(__dirname, '..', '/static'));
 
-  const sourceDir = 'static/';
+  const tempShaDir = path__WEBPACK_IMPORTED_MODULE_6___default().join((temp_dir__WEBPACK_IMPORTED_MODULE_7___default()), shortSha);
+  console.log('tempShaDir', tempShaDir);
 
   try {
-    const copyOutput = await fs_extra__WEBPACK_IMPORTED_MODULE_6___default().copySync(sourceDir, (temp_dir__WEBPACK_IMPORTED_MODULE_5___default()));
+    await fs_extra__WEBPACK_IMPORTED_MODULE_8___default().mkdirp(tempShaDir);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    const copyOutput = await fs_extra__WEBPACK_IMPORTED_MODULE_8___default().copy(__nccwpck_require__.ab + "static", tempShaDir);
     console.log('copyOutput', copyOutput);
   } catch (e) {
     console.error(e);
   }
 
   try {
-    const readdirOutput = await fs__WEBPACK_IMPORTED_MODULE_4___default().promises.readdir((temp_dir__WEBPACK_IMPORTED_MODULE_5___default()));
+    const readdirOutput = await fs__WEBPACK_IMPORTED_MODULE_5___default().promises.readdir(tempShaDir);
+    console.log('temp dir', (temp_dir__WEBPACK_IMPORTED_MODULE_7___default()));
     console.log('dir output', readdirOutput);
   } catch (e) {
     console.error(e);
   }
-
   // copy static to the temp directory
-
   // const octokit = github.getOctokit(token);
   // const newIssue = await octokit.rest.issues.create({
   //   ...context.repo,

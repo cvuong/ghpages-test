@@ -2,9 +2,12 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
+import fs, { readdir } from 'fs';
+
 import { context } from '../dist';
-import fs from 'fs';
+import { execSync } from 'child_process';
 import fse from 'fs-extra';
+import path from 'path';
 import tempDir from 'temp-dir';
 
 // import ghpages from 'gh-pages';
@@ -42,29 +45,38 @@ import tempDir from 'temp-dir';
 // })();
 
 (async function () {
-  const token = core.getInput('token');
-  const context = github.context;
-  const shortSha = context.sha;
-  console.log('context', context);
+  // const token = core.getInput('token');
+  // const context = github.context;
+  // const shortSha = context.sha;
+  const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
+  console.log('shortSha', shortSha);
+  const sourceDir = path.join(__dirname, '..', '/static');
+  // console.log(path.join(__dirname, '..', '..', 'aaaa'));
+  // console.log(path.join(__dirname, '..', '/static'));
 
-  const sourceDir = 'static/';
+  const tempShaDir = path.join(tempDir, shortSha);
+  console.log('tempShaDir', tempShaDir);
 
   try {
-    const copyOutput = await fse.copySync(sourceDir, tempDir);
+    await fse.mkdirp(tempShaDir);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    const copyOutput = await fse.copy(sourceDir, tempShaDir);
     console.log('copyOutput', copyOutput);
   } catch (e) {
     console.error(e);
   }
 
   try {
-    const readdirOutput = await fs.promises.readdir(tempDir);
-    console.log('dir output', readdirOutput);
+    const readdirOutput = await fs.promises.readdir(tempShaDir);
+    console.log('readdirOutput', readdirOutput);
   } catch (e) {
     console.error(e);
   }
-
   // copy static to the temp directory
-
   // const octokit = github.getOctokit(token);
   // const newIssue = await octokit.rest.issues.create({
   //   ...context.repo,
