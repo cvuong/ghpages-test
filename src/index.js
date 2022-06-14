@@ -76,6 +76,21 @@ import tempDir from 'temp-dir';
   } catch (e) {
     console.error(e);
   }
+
+  // git fetch
+  execSync('git fetch');
+
+  // git switch
+  // TODO: need to be able to pass in a branch name
+  execSync('git switch gh-pages');
+
+  // move files from temp directory to the root
+  try {
+    await fse.move(tempShaDir, path.resolve('./'));
+  } catch (e) {
+    console.error(e);
+  }
+
   // copy static to the temp directory
   // const octokit = github.getOctokit(token);
   // const newIssue = await octokit.rest.issues.create({
