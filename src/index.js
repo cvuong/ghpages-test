@@ -3,6 +3,9 @@ import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
 import { context } from '../dist';
+import fs from 'fs';
+import fse from 'fs-extra';
+import tempDir from 'temp-dir';
 
 // import ghpages from 'gh-pages';
 
@@ -41,7 +44,27 @@ import { context } from '../dist';
 (async function () {
   const token = core.getInput('token');
   const context = github.context;
+  const shortSha = context.sha;
   console.log('context', context);
+
+  const sourceDir = 'static/';
+
+  try {
+    const copyOutput = await fse.copySync(sourceDir, tempDir);
+    console.log('copyOutput', copyOutput);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    const readdirOutput = await fs.promises.readdir(tempDir);
+    console.log('dir output', readdirOutput);
+  } catch (e) {
+    console.error(e);
+  }
+
+  // copy static to the temp directory
+
   // const octokit = github.getOctokit(token);
   // const newIssue = await octokit.rest.issues.create({
   //   ...context.repo,

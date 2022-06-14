@@ -7,7 +7,9 @@
     "@babel/node": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@vercel/ncc": "^0.34.0",
-    "gh-pages": "^4.0.0"
+    "fs-extra": "^10.1.0",
+    "gh-pages": "^4.0.0",
+    "temp-dir": "^2.0.0"
   },
   "scripts": {
     "clean": "rm -rf dist/",
