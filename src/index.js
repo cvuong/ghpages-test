@@ -82,7 +82,7 @@ import tempDir from 'temp-dir';
 
   // git switch
   // TODO: need to be able to pass in a branch name
-  execSync('git switch gh-pages');
+  execSync('git switch -f gh-pages');
 
   // move files from temp directory to the root
   try {
