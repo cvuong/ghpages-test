@@ -19532,7 +19532,7 @@ const userName = 'docs-bot';
 const { CI } = process.env;
 // TODO: make sure we automatically generate this
 const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
-const timeout = 30 * 1000; // 10 s
+const timeout = 60 * 1000; // 60s
 
 (async function () {
   // const token = core.getInput('token');
@@ -19620,7 +19620,7 @@ const timeout = 30 * 1000; // 10 s
 
     if (Date.now() > endTime) {
       console.log('failure');
-      clearInterval(timer);
+      process.exit(1);
     }
   }, 3000);
 
