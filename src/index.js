@@ -4,6 +4,7 @@ import * as github from '@actions/github';
 
 import fs, { readdir } from 'fs';
 
+import axios from 'axios';
 import { context } from '../dist';
 import { execSync } from 'child_process';
 import fse from 'fs-extra';
@@ -47,6 +48,9 @@ import tempDir from 'temp-dir';
 const userEmail = 'test@test.com';
 const userName = 'docs-bot';
 const { CI } = process.env;
+// TODO: make sure we automatically generate this
+const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
+const timeout = 30 * 1000; // 10 s
 
 (async function () {
   // const token = core.getInput('token');
@@ -108,6 +112,25 @@ const { CI } = process.env;
   execSync(`git commit -m ${shortSha}`);
 
   execSync('git push');
+
+  const startTime = Date.now();
+  const endTime = startTime + timeout;
+
+  const docsUrl = docsRootUrl + '/' + shortSha;
+
+  const timer = setInterval(async () => {
+    console.log('waiting on url', docsUrl);
+    const res = await axios.get(docsUrl);
+    if (res.status === 200) {
+      console.log('we have a success');
+      clearInterval(timer);
+    }
+
+    if (Date.now() > endTime) {
+      console.log('failure');
+      clearInterval(timer);
+    }
+  }, 3000);
 
   // remove node modules by cleaning everything
 
