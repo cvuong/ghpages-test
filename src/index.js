@@ -84,12 +84,25 @@ import tempDir from 'temp-dir';
   // TODO: need to be able to pass in a branch name
   execSync('git switch -f gh-pages');
 
+  execSync('git clean -f -d');
+
   // move files from temp directory to the root
+  const newDir = path.join('.', shortSha);
   try {
-    await fse.move(tempShaDir, path.resolve('./'));
+    await fse.move(tempShaDir, newDir);
   } catch (e) {
     console.error(e);
   }
+
+  execSync('git add .');
+
+  execSync(`git commit -m ${shortSha}`);
+
+  execSync('git push');
+
+  // remove node modules by cleaning everything
+
+  // add new folder with commit
 
   // copy static to the temp directory
   // const octokit = github.getOctokit(token);
