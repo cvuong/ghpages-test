@@ -125,6 +125,8 @@ const timeout = 30 * 1000; // 10 s
     try {
       res = await axios.get(docsUrl);
     } catch (e) {
+      console.log('this is the catch block');
+      console.log('here is the res', res);
       console.error(e);
     }
 

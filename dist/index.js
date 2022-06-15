@@ -19607,6 +19607,8 @@ const timeout = 30 * 1000; // 10 s
     try {
       res = await axios__WEBPACK_IMPORTED_MODULE_4___default().get(docsUrl);
     } catch (e) {
+      console.log('this is the catch block');
+      console.log('here is the res', res);
       console.error(e);
     }
 
