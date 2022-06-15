@@ -124,13 +124,14 @@ const timeout = 30 * 1000; // 10 s
 
     try {
       res = await axios.get(docsUrl);
+      console.log('here is the fulfilled res', res);
     } catch (e) {
       console.log('this is the catch block');
-      console.log('here is the res', res);
-      console.error(e);
+      // console.log('here is the res', res);
+      // console.error(e);
     }
 
-    if (res.status === 200) {
+    if (res && res.status === 200) {
       console.log('we have a success');
       clearInterval(timer);
     }
