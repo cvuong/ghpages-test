@@ -44,6 +44,10 @@ import tempDir from 'temp-dir';
 //   }
 // })();
 
+const userEmail = 'test@test.com';
+const userName = 'docs-bot';
+const { CI } = process.env;
+
 (async function () {
   // const token = core.getInput('token');
   // const context = github.context;
@@ -75,6 +79,11 @@ import tempDir from 'temp-dir';
     console.log('readdirOutput', readdirOutput);
   } catch (e) {
     console.error(e);
+  }
+
+  if (CI) {
+    execSync(`git config --global user.email "${userEmail}"`);
+    execSync(`git config --global user.name "${userName}"`);
   }
 
   // git fetch

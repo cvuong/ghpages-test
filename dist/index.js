@@ -13406,6 +13406,10 @@ __nccwpck_require__.r(__webpack_exports__);
 //   }
 // })();
 
+const userEmail = 'test@test.com';
+const userName = 'docs-bot';
+const { CI } = process.env;
+
 (async function () {
   // const token = core.getInput('token');
   // const context = github.context;
@@ -13437,6 +13441,11 @@ __nccwpck_require__.r(__webpack_exports__);
     console.log('readdirOutput', readdirOutput);
   } catch (e) {
     console.error(e);
+  }
+
+  if (CI) {
+    (0,child_process__WEBPACK_IMPORTED_MODULE_5__.execSync)(`git config --global user.email "${userEmail}"`);
+    (0,child_process__WEBPACK_IMPORTED_MODULE_5__.execSync)(`git config --global user.name "${userName}"`);
   }
 
   // git fetch
