@@ -19602,7 +19602,14 @@ const timeout = 30 * 1000; // 10 s
 
   const timer = setInterval(async () => {
     console.log('waiting on url', docsUrl);
-    const res = await axios__WEBPACK_IMPORTED_MODULE_4___default().get(docsUrl);
+    let res;
+
+    try {
+      res = await axios__WEBPACK_IMPORTED_MODULE_4___default().get(docsUrl);
+    } catch (e) {
+      console.error(e);
+    }
+
     if (res.status === 200) {
       console.log('we have a success');
       clearInterval(timer);
