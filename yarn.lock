@@ -995,6 +995,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@markdoc/markdoc@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@markdoc/markdoc/-/markdoc-0.1.2.tgz#401c7536ed1fd33951458747d2d74f217241e142"
+  integrity sha512-3p+JTC1A0eqBdrl2UOIRoy+FLKtG1mh81R3Zzdm7FJiQIMt2mJmqmVQNDf3Md62G9rTtbj0ZuxlEattMbaslbw==
+
 "@octokit/auth-token@^2.4.4":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@octokit/auth-token/-/auth-token-2.5.0.tgz#27c37ea26c205f28443402477ffd261311f21e36"

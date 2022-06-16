@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 
+import Markdoc from '@markdoc/markdoc';
 import axios from 'axios';
 import { execSync } from 'child_process';
 import fs from 'fs';
@@ -16,10 +17,34 @@ const DEFAULTS = {
 };
 
 const { CI } = process.env;
-// TODO: make sure we automatically generate this
-const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
 
 (async function () {
+  // TODO: Need to programmatically read all docs
+  const mdPath = path.resolve(__dirname, '..', 'docs', 'index.md');
+  console.log('mdPath', mdPath);
+  const source = await fs.promises.readFile(mdPath, { encoding: 'utf-8' });
+  console.log('source', source);
+  const ast = Markdoc.parse(source);
+  const content = Markdoc.transform(ast);
+  const html = Markdoc.renderers.html(content);
+  console.log('html', html);
+  const writeDirPath = path.resolve(__dirname, '..', 'static', 'docs');
+  console.log('writeDirPath', writeDirPath);
+  const writePath = path.join(writeDirPath, 'index.html');
+  console.log('writePath', writePath);
+  try {
+    await fse.mkdirp(writeDirPath);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    await fs.promises.writeFile(writePath, html, { flag: 'a' });
+  } catch (e) {
+    console.error(e);
+  }
+  console.log('html', html);
+
   const username = core.getInput('username') || DEFAULTS.USERNAME;
   const email = core.getInput('email') || DEFAULTS.EMAIL;
   const timeout = parseInt(core.getInput('timeout')) || DEFAULTS.TIMEOUT;
@@ -33,7 +58,8 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
   const docsRootUrl = `https://${owner}.github.io/${repo}`;
 
   const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
-  const sourceDir = path.join(__dirname, '..', '/static');
+  const sourceDir = path.join(__dirname, '..', 'static', 'docs');
+  console.log('sourceDir', sourceDir);
   const tempShaDir = path.join(tempDir, shortSha);
 
   try {
