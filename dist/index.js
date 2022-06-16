@@ -18279,11 +18279,11 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
     try {
       res = await axios_default().get(docsUrl);
     } catch (e) {
-      console.log('Waiting for docs to be deployed on', docsUrl);
+      console.log(`Waiting for docs(${docsUrl}) to be deployed...`);
     }
 
     if (res && res.status === 200) {
-      console.log('We successfully deployed the docs.');
+      console.log('We successfully deployed the docs on', docsUrl);
       clearInterval(timer);
     }
 
