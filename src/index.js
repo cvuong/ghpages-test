@@ -31,15 +31,8 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
     repo: { owner, repo },
   } = context;
 
-  console.log('owner', owner);
-  console.log('repo', repo);
-
-  // const [organization, branch] = full_name.split('/');
-
-  const docsRootUrl = `https://${organization}.github.io/${branch}`;
+  const docsRootUrl = `https://${owner}.github.io/${repo}`;
   console.log('doc roots url', docsRootUrl);
-
-  process.exit(1);
 
   const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
   const sourceDir = path.join(__dirname, '..', '/static');
@@ -102,8 +95,6 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
       res = await axios.get(docsUrl);
     } catch (e) {
       console.log('Waiting for docs to be deployed on', docsUrl);
-      // console.log('here is the res', res);
-      // console.error(e);
     }
 
     if (res && res.status === 200) {
