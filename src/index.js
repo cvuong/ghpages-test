@@ -26,11 +26,15 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
   const pagesBranch = core.getInput('pagesBranch') || DEFAULTS.PAGES_BRANCH;
 
   const context = github.context;
+  console.log('context', context);
   const {
-    repository: { full_name },
+    repo: { owner, repo },
   } = context;
 
-  const [organization, branch] = full_name.split('/');
+  console.log('owner', owner);
+  console.log('repo', repo);
+
+  // const [organization, branch] = full_name.split('/');
 
   const docsRootUrl = `https://${organization}.github.io/${branch}`;
   console.log('doc roots url', docsRootUrl);
