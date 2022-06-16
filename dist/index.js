@@ -29434,23 +29434,15 @@ function transformMarkdownToHtml(markdown) {
  * @param {string} dest
  */
 async function buildHtml(src, dest) {
-  console.log('src', src);
-  console.log('dest', dest);
   const files = await glob_promise_lib_default()(external_path_default().join(src, '**/*.md'));
-  console.log('files', files);
 
   for (const file of files) {
-    console.log('file', file);
     const markdown = await external_fs_default().promises.readFile(file, { encoding: 'utf-8' });
-    console.log('markdown', markdown);
     const html = transformMarkdownToHtml(markdown);
-    console.log('replace', file.replace(src, dest));
     const writePath = file.replace(src, dest).replace('.md', '.html');
-    console.log('writePath', writePath);
 
     // ensure that the parent directory is created
     const parentDir = external_path_default().dirname(writePath);
-    console.log('parent dir', parentDir);
     try {
       await lib_default().mkdirp(parentDir);
     } catch (e) {
@@ -29483,7 +29475,6 @@ var temp_dir_default = /*#__PURE__*/__nccwpck_require__.n(temp_dir);
 
 
 
-
 const DEFAULTS = {
   USERNAME: 'docs-bot',
   EMAIL: 'test@test.com',
@@ -29494,11 +29485,21 @@ const DEFAULTS = {
 const { CI } = process.env;
 
 (async function () {
-  // TODO: Need to programmatically read all docs
+  const username = core.getInput('username') || DEFAULTS.USERNAME;
+  const email = core.getInput('email') || DEFAULTS.EMAIL;
+  const timeout = parseInt(core.getInput('timeout')) || DEFAULTS.TIMEOUT;
+  const pagesBranch = core.getInput('pagesBranch') || DEFAULTS.PAGES_BRANCH;
+
+  const context = github.context;
+  const {
+    repo: { owner, repo },
+  } = context;
+
+  const docsRootUrl = `https://${owner}.github.io/${repo}`;
+
+  // generate all of the markdown docs to static html files
   const mdPath = __nccwpck_require__.ab + "docs";
   const writePath = external_path_default().resolve(__dirname, '..', 'static', 'docs');
-
-  console.log('write path', writePath);
 
   try {
     await lib_default().mkdirp(writePath);
@@ -29506,22 +29507,7 @@ const { CI } = process.env;
     console.error(e);
   }
 
-  // const source = await fs.promises.readFile(mdPath, { encoding: 'utf-8' });
-  console.log(await buildHtml(__nccwpck_require__.ab + "docs", writePath));
-  process.exit(1);
-  console.log('writePath', writePath);
-
-  const username = core.getInput('username') || DEFAULTS.USERNAME;
-  const email = core.getInput('email') || DEFAULTS.EMAIL;
-  const timeout = parseInt(core.getInput('timeout')) || DEFAULTS.TIMEOUT;
-  const pagesBranch = core.getInput('pagesBranch') || DEFAULTS.PAGES_BRANCH;
-
-  // const context = github.context;
-  // const {
-  //   repo: { owner, repo },
-  // } = context;
-  //
-  // const docsRootUrl = `https://${owner}.github.io/${repo}`;
+  await buildHtml(__nccwpck_require__.ab + "docs", writePath);
 
   const shortSha = (0,external_child_process_namespaceObject.execSync)('git rev-parse --short HEAD').toString().trim();
   const sourceDir = external_path_default().join(__dirname, '..', 'static', 'docs');
