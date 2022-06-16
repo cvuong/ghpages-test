@@ -29577,6 +29577,7 @@ const { CI } = process.env;
     if (res && res.status === 200) {
       console.log('We successfully deployed the docs on', docsUrl);
       clearInterval(timer);
+      return;
     }
 
     if (Date.now() > endTime) {
