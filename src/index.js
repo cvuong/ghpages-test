@@ -1,69 +1,45 @@
 import * as core from '@actions/core';
-import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
-import fs, { readdir } from 'fs';
-
 import axios from 'axios';
-import { context } from '../dist';
 import { execSync } from 'child_process';
+import fs from 'fs';
 import fse from 'fs-extra';
 import path from 'path';
 import tempDir from 'temp-dir';
 
-// import ghpages from 'gh-pages';
+const DEFAULTS = {
+  USERNAME: 'docs-bot',
+  EMAIL: 'test@test.com',
+  TIMEOUT: 60,
+  PAGES_BRANCH: 'gh-pages',
+};
 
-// (async function () {
-//   function ghPagesPromise() {
-//     return new Promise((resolve, reject) => {
-//       ghpages.publish(
-//         'static',
-//         {
-//           repo: 'https://github.com/cvuong/ghpages-test.git',
-//           user: {
-//             name: 'github-actions-bot',
-//             email: 'test@test.com',
-//           },
-//           dest: 'blah1',
-//         },
-//         (err) => {
-//           if (err) {
-//             reject(err);
-//             return;
-//           }
-//           resolve();
-//         }
-//       );
-//     });
-//   }
-
-//   const res = await ghPagesPromise();
-//   if (!res) {
-//     console.log('Success');
-//   } else {
-//     console.log('Error');
-//   }
-// })();
-
-const userEmail = 'test@test.com';
-const userName = 'docs-bot';
 const { CI } = process.env;
 // TODO: make sure we automatically generate this
 const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
-const timeout = 60 * 1000; // 60s
 
 (async function () {
-  // const token = core.getInput('token');
-  // const context = github.context;
-  // const shortSha = context.sha;
-  const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
-  console.log('shortSha', shortSha);
-  const sourceDir = path.join(__dirname, '..', '/static');
-  // console.log(path.join(__dirname, '..', '..', 'aaaa'));
-  // console.log(path.join(__dirname, '..', '/static'));
+  const username = core.getInput('username') || DEFAULTS.USERNAME;
+  const email = core.getInput('email') || DEFAULTS.EMAIL;
+  const timeout = parseInt(core.getInput('timeout')) || DEFAULTS.TIMEOUT;
+  const pagesBranch = core.getInput('pagesBranch') || DEFAULTS.PAGES_BRANCH;
 
+  const context = github.context;
+  const {
+    repository: { full_name },
+  } = context;
+
+  const [organization, branch] = full_name.split('/');
+
+  const docsRootUrl = `https://${organization}.github.io/${branch}`;
+  console.log('doc roots url', docsRootUrl);
+
+  process.exit(1);
+
+  const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
+  const sourceDir = path.join(__dirname, '..', '/static');
   const tempShaDir = path.join(tempDir, shortSha);
-  console.log('tempShaDir', tempShaDir);
 
   try {
     await fse.mkdirp(tempShaDir);
@@ -72,30 +48,27 @@ const timeout = 60 * 1000; // 60s
   }
 
   try {
-    const copyOutput = await fse.copy(sourceDir, tempShaDir);
-    console.log('copyOutput', copyOutput);
+    await fse.copy(sourceDir, tempShaDir);
   } catch (e) {
     console.error(e);
   }
 
   try {
-    const readdirOutput = await fs.promises.readdir(tempShaDir);
-    console.log('readdirOutput', readdirOutput);
+    await fs.promises.readdir(tempShaDir);
   } catch (e) {
     console.error(e);
   }
 
   if (CI) {
-    execSync(`git config --global user.email "${userEmail}"`);
-    execSync(`git config --global user.name "${userName}"`);
+    execSync(`git config --global user.email "${email}"`);
+    execSync(`git config --global user.name "${username}"`);
   }
 
   // git fetch
   execSync('git fetch');
 
   // git switch
-  // TODO: need to be able to pass in a branch name
-  execSync('git switch -f gh-pages');
+  execSync(`git switch -f ${pagesBranch}`);
 
   execSync('git clean -f -d');
 
@@ -119,43 +92,24 @@ const timeout = 60 * 1000; // 60s
   const docsUrl = docsRootUrl + '/' + shortSha;
 
   const timer = setInterval(async () => {
-    console.log('waiting on url', docsUrl);
     let res;
 
     try {
       res = await axios.get(docsUrl);
-      console.log('here is the fulfilled res', res);
     } catch (e) {
-      console.log('this is the catch block');
+      console.log('Waiting for docs to be deployed on', docsUrl);
       // console.log('here is the res', res);
       // console.error(e);
     }
 
     if (res && res.status === 200) {
-      console.log('we have a success');
+      console.log('We successfully deployed the docs.');
       clearInterval(timer);
     }
 
     if (Date.now() > endTime) {
-      console.log('failure');
+      console.error('We were unable to deploy the docs.');
       process.exit(1);
     }
   }, 3000);
-
-  // remove node modules by cleaning everything
-
-  // add new folder with commit
-
-  // copy static to the temp directory
-  // const octokit = github.getOctokit(token);
-  // const newIssue = await octokit.rest.issues.create({
-  //   ...context.repo,
-  //   title: 'new issue',
-  //   body: 'hi there',
-  // });
-  // const ref = await octokit.rest.git.createRef({
-  //   ...context.repo,
-  //   ref: 'refs/heads/blah',
-  //   sha: '1234'
-  // });
 })();
