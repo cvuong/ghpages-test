@@ -18213,13 +18213,11 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
   const pagesBranch = core.getInput('pagesBranch') || DEFAULTS.PAGES_BRANCH;
 
   const context = github.context;
-  console.log('context', context);
   const {
     repo: { owner, repo },
   } = context;
 
   const docsRootUrl = `https://${owner}.github.io/${repo}`;
-  console.log('doc roots url', docsRootUrl);
 
   const shortSha = (0,external_child_process_namespaceObject.execSync)('git rev-parse --short HEAD').toString().trim();
   const sourceDir = __nccwpck_require__.ab + "static";
@@ -18271,7 +18269,7 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
   (0,external_child_process_namespaceObject.execSync)('git push');
 
   const startTime = Date.now();
-  const endTime = startTime + timeout;
+  const endTime = startTime + timeout * 1000;
 
   const docsUrl = docsRootUrl + '/' + shortSha;
 

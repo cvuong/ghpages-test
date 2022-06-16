@@ -26,13 +26,11 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
   const pagesBranch = core.getInput('pagesBranch') || DEFAULTS.PAGES_BRANCH;
 
   const context = github.context;
-  console.log('context', context);
   const {
     repo: { owner, repo },
   } = context;
 
   const docsRootUrl = `https://${owner}.github.io/${repo}`;
-  console.log('doc roots url', docsRootUrl);
 
   const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
   const sourceDir = path.join(__dirname, '..', '/static');
@@ -84,7 +82,7 @@ const docsRootUrl = 'https://cvuong.github.io/ghpages-test';
   execSync('git push');
 
   const startTime = Date.now();
-  const endTime = startTime + timeout;
+  const endTime = startTime + timeout * 1000;
 
   const docsUrl = docsRootUrl + '/' + shortSha;
 
