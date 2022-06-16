@@ -11,10 +11,12 @@
     "axios": "^0.27.2",
     "fs-extra": "^10.1.0",
     "gh-pages": "^4.0.0",
+    "glob": "^8.0.3",
+    "glob-promise": "^4.2.2",
     "temp-dir": "^2.0.0"
   },
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf dist/ && rm -rf static/",
     "build": "yarn run clean && yarn run ncc build src/index.js -s -o dist/",
     "watch": "yarn run clean && yarn run ncc build src/index.js -w -s -o dist/"
   }

@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 
-import Markdoc from '@markdoc/markdoc';
 import axios from 'axios';
+import { buildHtml } from '../lib/markdown';
 import { execSync } from 'child_process';
 import fs from 'fs';
 import fse from 'fs-extra';
@@ -19,32 +19,6 @@ const DEFAULTS = {
 const { CI } = process.env;
 
 (async function () {
-  // TODO: Need to programmatically read all docs
-  const mdPath = path.resolve(__dirname, '..', 'docs', 'index.md');
-  console.log('mdPath', mdPath);
-  const source = await fs.promises.readFile(mdPath, { encoding: 'utf-8' });
-  console.log('source', source);
-  const ast = Markdoc.parse(source);
-  const content = Markdoc.transform(ast);
-  const html = Markdoc.renderers.html(content);
-  console.log('html', html);
-  const writeDirPath = path.resolve(__dirname, '..', 'static', 'docs');
-  console.log('writeDirPath', writeDirPath);
-  const writePath = path.join(writeDirPath, 'index.html');
-  console.log('writePath', writePath);
-  try {
-    await fse.mkdirp(writeDirPath);
-  } catch (e) {
-    console.error(e);
-  }
-
-  try {
-    await fs.promises.writeFile(writePath, html, { flag: 'a' });
-  } catch (e) {
-    console.error(e);
-  }
-  console.log('html', html);
-
   const username = core.getInput('username') || DEFAULTS.USERNAME;
   const email = core.getInput('email') || DEFAULTS.EMAIL;
   const timeout = parseInt(core.getInput('timeout')) || DEFAULTS.TIMEOUT;
@@ -57,9 +31,22 @@ const { CI } = process.env;
 
   const docsRootUrl = `https://${owner}.github.io/${repo}`;
 
+  // generate all of the markdown docs to static html files
+  const mdPath = path.resolve(__dirname, '..', 'docs');
+  const writePath = path.resolve(__dirname, '..', 'static', 'docs');
+
+  try {
+    await fse.mkdirp(writePath);
+  } catch (e) {
+    console.error(e);
+  }
+
+  await buildHtml(mdPath, writePath);
+
   const shortSha = execSync('git rev-parse --short HEAD').toString().trim();
   const sourceDir = path.join(__dirname, '..', 'static', 'docs');
   console.log('sourceDir', sourceDir);
+
   const tempShaDir = path.join(tempDir, shortSha);
 
   try {
