@@ -1,3 +1,5 @@
+import NextLink from 'next/link';
+
 type Props = {
   children: React.ReactNode;
   href: string;
@@ -6,13 +8,14 @@ type Props = {
 
 function Link({ children, href, title }: Props) {
   return (
-    <a
-      href={href}
-      title={title}
-      className="decoration-sky-400 font-semibold text-lg text-sky-500 underline"
-    >
-      {children}
-    </a>
+    <NextLink href={href}>
+      <a
+        title={title}
+        className="decoration-sky-400 font-semibold text-lg text-sky-500 underline"
+      >
+        {children}
+      </a>
+    </NextLink>
   );
 }
 

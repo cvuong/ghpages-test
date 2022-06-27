@@ -61,23 +61,18 @@ async function getNavData() {
   for (const docPath of docPaths) {
     const relPath = docPath.substring(baseDocsDir.length);
     const slug = getSlugFromPath(relPath);
-    console.log('slug', slug);
-    console.log('docPath', docPath);
 
     // Start at the root
     let currentBranch = navTree;
 
     slug.forEach((token, i) => {
-      console.log('token', token);
       const match = currentBranch.children.find((node: any) => {
         return node.token === token;
       });
-      console.log('match', match);
 
       if (match) {
         currentBranch = match;
       } else {
-        console.log('begin currentBranch', currentBranch);
         // different behavior for leaf nodes
         const isLeaf = i === slug.length - 1;
         const newNode = {
@@ -127,7 +122,6 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   context
 ) => {
   const { params } = context;
-  console.log('getStaticProps params', params);
   // default slug to be empty for the case where we are in the top level directory's index.md
   const slug = params?.slug || [];
   const fullPath = getPathFromSlug(slug);
@@ -137,27 +131,24 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   const content = JSON.stringify(Markdoc.transform(ast, config));
 
   const navData = await getNavData();
-  console.log('navData', navData);
 
   return {
     props: {
       content,
       navData,
-      slug,
     },
   };
 };
 
 const Home: NextPage<Props> = (props) => {
-  const { content, navData, slug } = props;
+  const { content, navData } = props;
   const parsedContent = JSON.parse(content);
-  console.log('here are the props', props);
 
   return (
     <div className="flex">
       <div className="basis-72">
         <div className="h-screen p-8 overflow-y-auto">
-          <NavTree navData={navData} slug={slug} />
+          <NavTree navData={navData} />
         </div>
       </div>
       <div className="basis-0 grow p-16">

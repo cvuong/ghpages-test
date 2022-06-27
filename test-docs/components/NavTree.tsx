@@ -1,11 +1,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-function NavTree({ navData, slug }) {
+function NavTree({ navData }) {
   const router = useRouter();
   const { children: sections } = navData;
-  console.log('navtree navdata', navData);
-  console.log('sections', sections);
 
   return (
     <div className="mb-16">

@@ -1,6 +1,8 @@
 import { Tag, nodes } from '@markdoc/markdoc';
 
 import type { Schema } from '@markdoc/markdoc';
+import { fence } from './Fence.markdoc';
+import { snippet } from './Snippet.markdoc';
 
 const heading: Schema = {
   render: 'Heading',
@@ -22,15 +24,20 @@ const blockquote: Schema = {
 };
 
 const link: Schema = {
+  ...nodes.link,
   render: 'Link',
 };
 
 const config = {
   nodes: {
     blockquote,
+    fence,
     heading,
     link,
     paragraph,
+  },
+  tags: {
+    snippet,
   },
 };
 
