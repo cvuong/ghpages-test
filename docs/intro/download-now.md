@@ -4,15 +4,7 @@
 
 It displays a heading saying “Hello, world!” on the page.
 
-```javascript
-console.log('testaaa');
-```
-
 {% snippet path="intro/test.js" /%}
-
-{% snippet path="intro/test.js"}
-test
-{% /snippet %}
 
 [Try it on CodePen](https://www.google.com)
 

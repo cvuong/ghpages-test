@@ -1,58 +1,13 @@
 import type { RenderableTreeNode, Schema } from '@markdoc/markdoc';
 
 import { Tag } from '@markdoc/markdoc';
-import fs from 'fs';
-// import readline from 'readline';
+import detect from 'language-detect';
 import lineByLine from 'n-readlines';
 import pathPkg from 'path';
 
-// TODO: do this in a more performant way
-// TODO: need to support more languages
-const START = '/* start */';
-const END = '/* end */';
-
-// function getContentFromPath(path: string) {
-//   return async () => {
-//     // TODO: switch this out to use the GH actions docs path
-//     const baseDocsDir = pathPkg.join(process.cwd(), '..', 'docs');
-//     const fullPath = pathPkg.join(baseDocsDir, path);
-//     console.log('fullPath');
-//     // TODO: switch this out to use the GH actions docs path
-//     const stream = fs.createReadStream(fullPath);
-//     const lineReader = readline.createInterface({
-//       input: stream,
-//       crlfDelay: Infinity,
-//     });
-
-//     let source = '';
-//     let isWriting = false;
-
-//     for await (const line of lineReader) {
-//       if (line === END) {
-//         isWriting = false;
-//       }
-
-//       source += line;
-
-//       if (line === START) {
-//         isWriting = true;
-//       }
-//     }
-
-//     return source;
-//   };
-// }
-
 function getContentFromPath(path: string) {
-  // TODO: switch this out to use the GH actions docs path
-  const baseDocsDir = pathPkg.join(process.cwd(), '..', 'docs');
-  const fullPath = pathPkg.join(baseDocsDir, path);
-  console.log('fullPath', fullPath);
-  // TODO: switch this out to use the GH actions docs path
-  const stream = fs.createReadStream(fullPath);
-
   let source = '';
-  const liner = new lineByLine(fullPath);
+  const liner = new lineByLine(path);
   let line;
   while ((line = liner.next())) {
     source += line + '\n';
@@ -76,7 +31,15 @@ export const snippet: Schema = {
       ...node.transformAttributes(config),
     };
     const { path } = attributes;
-    const content = getContentFromPath(path);
+
+    // TODO: switch this out to use the GH actions docs path
+    const baseDocsDir = pathPkg.join(process.cwd(), '..', 'docs');
+    const fullPath = pathPkg.join(baseDocsDir, path);
+    console.log('fullPath', fullPath);
+
+    attributes.language = detect.sync(fullPath).toLowerCase();
+
+    const content = getContentFromPath(fullPath);
     return new Tag('Snippet', attributes, [content]);
   },
 };

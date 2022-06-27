@@ -5,15 +5,10 @@ import Prism from 'react-prism';
 
 type Props = {
   children: React.ReactNode;
-  path: string;
+  language: string;
 };
 
-// function Snippet({ code, path }: Props) {
-function Snippet(props: Props) {
-  const { children, path } = props;
-  console.log('snippet props', props);
-  // TODO: parse the path to get the language
-  const language = 'javascript';
+function Snippet({ children, language }: Props) {
   return (
     <Prism
       key={language}
